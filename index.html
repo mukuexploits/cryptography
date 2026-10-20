@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'">
+<title>MUKU EXPLOITS — CRYPTO LAB</title><link rel="stylesheet" href="style.css"></head><body>
+<header class="top"><b class="logo">MUKU EXPLOITS</b><span class="st"><i></i>CRYPTO LAB · local only</span>
+<button id="menu" aria-label="Menu">☰</button>
+<nav id="nav"><a href="#bench">Workbench</a><a href="#encode">Encoding</a><a href="#hash">Hashing</a><a href="#e2ee">E2EE</a><a href="#classic">Classical</a><a href="#sign">Signatures</a><a href="#term">Terminal</a><a href="#privacy">Privacy</a></nav></header>
+<main>
+<section class="hero"><p class="note">Educational cryptography simulator · session <span id="clock">00:00</span></p>
+<h1>ENTER THE WORLD OF CRYPTOGRAPHY</h1>
+<p>Secure communication, ciphers, hashing and digital signatures — run for real in your browser with the Web Crypto API.</p>
+<pre id="stream" aria-hidden="true"></pre>
+<a class="btn" href="#bench">Launch Crypto Lab</a> <a class="btn alt" href="#e2ee">Explore E2EE</a>
+<p class="tag">Understand the Code. Master the Cipher. Protect the Data.</p></section>
+
+<section id="bench"><h2>Encryption workbench</h2>
+<div class="row"><select id="alg" aria-label="Algorithm"><option value="aes">AES-256-GCM (random key)</option><option value="pbe">Password (PBKDF2-SHA256 → AES-GCM)</option><option value="rsa">RSA-OAEP (SHA-256)</option></select>
+<input id="pw" type="password" placeholder="Password (password mode)" autocomplete="off"></div>
+<label for="msg">Message, or encrypted package to decrypt</label><textarea id="msg" rows="4"></textarea><small id="mc">0 chars</small>
+<div class="row"><button id="gen">Generate Key</button><button id="enc">Encrypt</button><button id="dec">Decrypt</button><button id="tam">Tamper test</button><button id="cpy">Copy Output</button><button id="clr">Clear</button></div>
+<div class="flow" id="flow">Plaintext → Algorithm + Key → Ciphertext</div>
+<label for="out">Output</label><textarea id="out" rows="5" readonly></textarea><small id="oc">0 chars</small><p id="bs" class="status" role="status"></p>
+<p class="note">The IV/salt is not secret but must be unique per key; the package carries it. AES key and RSA private key stay in memory only and are never shown or stored. Weak passwords stay guessable. RSA only fits small messages — real systems use hybrid encryption (see E2EE).</p></section>
+
+<section id="encode"><h2>Encoding lab</h2>
+<div class="row"><select id="em"><option value="b64">Base64</option><option value="hex">Hexadecimal (UTF-8)</option><option value="url">URL</option></select><button id="ee">Encode</button><button id="ed">Decode</button><button id="ex">Example</button><button id="ec">Copy</button><button id="el">Clear</button></div>
+<textarea id="ei" rows="3" aria-label="Input"></textarea><textarea id="eo" rows="3" readonly aria-label="Output"></textarea><p id="es" class="status" role="status"></p>
+<p class="note">Encoding is not encryption: no key, no confidentiality — anyone can reverse it.</p></section>
+
+<section id="hash"><h2>Hashing and integrity</h2>
+<div class="row"><select id="ha"><option>SHA-256</option><option>SHA-384</option><option>SHA-512</option></select><button id="hg">Hash</button><button id="hc">Copy hash</button><button id="hv">Avalanche demo</button></div>
+<textarea id="hi" rows="3" aria-label="Text to hash"></textarea><pre id="ho"></pre>
+<input id="hcmp" placeholder="Paste a hash to compare (constant-time)"><button id="hcb">Compare</button><p id="hs" class="status" role="status"></p>
+<p class="note">A hash cannot be decrypted. SHA-256 alone is not a password-storage function — use Argon2id, scrypt or tuned PBKDF2. Browser timing is no side-channel guarantee.</p></section>
+
+<section id="e2ee"><h2>End-to-end encryption simulator</h2>
+<div class="row"><button id="s1">Generate Demo Keys</button><button id="s2">Compose Message</button><button id="s3">Encrypt Message</button><button id="s4">Send Encrypted Packet</button><button id="s5">Decrypt at Receiver</button><button id="s6">Reset Simulation</button></div>
+<div class="two"><div class="card"><h3>Alice — Sender</h3><textarea id="am" rows="2" aria-label="Alice message">Hi Bob, meet at 6.</textarea><pre id="ap"></pre></div>
+<div class="card"><h3>Bob — Receiver</h3><pre id="bp"></pre></div></div>
+<div class="flow" id="eflow">Alice → Local Encryption → Untrusted Network → Bob's Local Decryption</div><pre id="elog"></pre>
+<p class="note">Hybrid: AES-GCM encrypts the message; Bob's RSA-OAEP public key wraps the session key. Educational only — no identity verification, replay protection, forward secrecy or endpoint safety. Real E2EE needs a reviewed protocol.</p></section>
+
+<section id="classic"><h2>Classical ciphers</h2>
+<div class="row"><select id="cc"><option value="caesar">Caesar</option><option value="rot13">ROT13</option><option value="vig">Vigenère</option><option value="xor">XOR (hex output)</option></select><input id="ck" placeholder="Shift or key" value="3"><button id="ce">Encrypt</button><button id="cd">Decrypt</button><button id="cb">Brute-force Caesar</button></div>
+<textarea id="ci" rows="3" aria-label="Input">Attack at dawn</textarea><pre id="co"></pre><p id="cs" class="status" role="status"></p>
+<p class="note">Caesar shifts letters; Vigenère repeats a keyword; XOR combines bytes with a short key. All are trivially broken — never protect real data with them.</p></section>
+
+<section id="sign"><h2>Digital signatures (ECDSA P-256 / SHA-256)</h2>
+<div class="row"><button id="kg">Generate signing keys</button><button id="sg">Sign</button><button id="vf">Verify</button></div>
+<textarea id="sm" rows="2" aria-label="Message to sign">Pay Bob 10 coins</textarea><textarea id="ssig" rows="2" aria-label="Signature (Base64)"></textarea><p id="ss" class="status" role="status"></p>
+<p class="note">Edit the message after signing, then Verify: it fails. Signatures prove integrity and authenticity; they do not hide the message. The private key is never displayed.</p></section>
+
+<section id="term"><h2>Terminal (simulated)</h2>
+<pre id="tout">Type help</pre><input id="tin" placeholder="help" aria-label="Command" autocomplete="off"></section>
+
+<section id="privacy"><h2>Privacy and limitations</h2>
+<p>Everything runs locally. No analytics, no servers, no secrets in storage or logs. JavaScript cannot guarantee memory erasure. This is a learning tool — not audited, not production security.</p><button id="all">Clear all</button></section>
+</main><footer>© MUKU EXPLOITS — CRYPTO LAB</footer><script src="script.js"></script></body></html>
